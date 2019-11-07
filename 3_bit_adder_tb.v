@@ -1,44 +1,30 @@
 `timescale 1ns/100ps
-`include "3bit_adder.v"
+`include "adder_3bits.v"
 
-module 3bit_adder_tb();
+module adder_3bits_tb();
 
-reg a, b, ci;
-wire s, co, w1, w2, w3;
 
-full_adder_wires fa1(a, b, ci, s, co, w1, w2, w3);
+reg [2:0] a, b;
+reg cin;
+wire [2:0] sum;
+wire co;
+
+adder_3bits adder(a, b, cin, sum, co);
 
 initial begin
+  $display("-----------------------");
+  $display("|t(ns)| a b ci | co s | ");
+  $display("-----------------------");
+  a = 3'b001; b = 3'b001; cin = 1'b0; 
+  #1 $display("|%4d | %b %b %b  |  %b %b |", $time, a, b, cin, co, sum);
+  a = 3'b011; b = 3'b010; cin = 1'b1;
+  #1 $display("|%4d | %b %b %b  |  %b %b |", $time, a, b, cin, co, sum);
+  a = 3'b011; b = 3'b100; cin = 1'b0;
+  #1 $display("|%4d | %b %b %b  |  %b %b |", $time, a, b, cin, co, sum);
+  a = 3'b111; b = 3'b001; cin = 1'b0;
+  #1 $display("|%4d | %b %b %b  |  %b %b |", $time, a, b, cin, co, sum);
 
-  $display("-------------------------------");
-  $display("t(ns)| a b ci | co s | w1 w2 w3");
-  $display("-------------------------------");
-  a = 0; b = 0; ci = 0; #1 $display("%4d | %b %b %b  |  %b %b |  %b  %b  %b", $time, a, b, ci, co, s, w1, w2, w3);
-  a = 0; b = 0; ci = 1; #1 $display("%4d | %b %b %b  |  %b %b |  %b  %b  %b", $time, a, b, ci, co, s, w1, w2, w3);
-  a = 0; b = 1; ci = 0; #1 $display("%4d | %b %b %b  |  %b %b |  %b  %b  %b", $time, a, b, ci, co, s, w1, w2, w3);
-  a = 0; b = 1; ci = 1; #1 $display("%4d | %b %b %b  |  %b %b |  %b  %b  %b", $time, a, b, ci, co, s, w1, w2, w3);
-  a = 1; b = 0; ci = 0; #1 $display("%4d | %b %b %b  |  %b %b |  %b  %b  %b", $time, a, b, ci, co, s, w1, w2, w3);
-  a = 1; b = 0; ci = 1; #1 $display("%4d | %b %b %b  |  %b %b |  %b  %b  %b", $time, a, b, ci, co, s, w1, w2, w3);
-  a = 1; b = 1; ci = 0; #1 $display("%4d | %b %b %b  |  %b %b |  %b  %b  %b", $time, a, b, ci, co, s, w1, w2, w3);
-  a = 1; b = 1; ci = 1; #1 $display("%4d | %b %b %b  |  %b %b |  %b  %b  %b", $time, a, b, ci, co, s, w1, w2, w3);
-  $display("-------------------------------");
-  $display("---------- Above we used $display staments for each input combination -----------");
-  $display();
-
-  $display("--- Below we used a single $monitor statement to report everytime the input changes---"); 
-  $display("----------------------------------------------------");
-  $display("T(ns)| A B Ci | Co S | W1 W2 W3 inputs go 7 -> 0 now");
-  $display("----------------------------------------------------");
-  $monitor("%4d | %b %b %b  |  %b %b |  %b  %b  %b", $time, a, b, ci, co, s, w1, w2, w3);
-  #1 a = 1; b = 1; ci = 1;
-  #1 a = 1; b = 1; ci = 0;
-  #1 a = 1; b = 0; ci = 1;
-  #1 a = 1; b = 0; ci = 0;
-  #1 a = 0; b = 1; ci = 1;
-  #1 a = 0; b = 1; ci = 0;
-  #1 a = 0; b = 0; ci = 1;
-  #1 a = 0; b = 0; ci = 0;
-  $display("----------------------------------------------------");
+  $display("-----------------------");
   end
 
 endmodule 
